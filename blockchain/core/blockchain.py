@@ -5,6 +5,7 @@ from blockchain.core.transaction import Transaction
 from blockchain.smart_contracts.executor import Executor
 from blockchain.smart_contracts.compiler import Compiler
 from blockchain.smart_contracts.vm import VirtualMachine
+from blockchain.nfts.nft import NFT
 
 
 class Blockchain:
@@ -13,6 +14,7 @@ class Blockchain:
         self.difficulty = 4  # Define the difficulty of Proof of Work (4 zeros)
         self.pending_transactions = []
         self.mining_reward = 50
+        self.nfts = {}  # Almacenamiento de NFTs
         compiler = Compiler()
 
         # Initialize the VirtualMachine with an empty 'variables' dictionary
@@ -80,11 +82,11 @@ class Blockchain:
         else:
             print(f"Contract {name} not found")
 
-    def add_transaction(self, sender: str, recipient: str, amount: float):
+    def add_transaction(self, sender: str, recipient: str, amount: float, data: dict = None):
         """
         Adds a new transaction to the list of pending transactions.
         """
-        transaction = Transaction(sender, recipient, amount)
+        transaction = Transaction(sender, recipient, amount, data)
         self.pending_transactions.append(transaction)
 
     def mine_pending_transactions(self):
@@ -104,3 +106,36 @@ class Blockchain:
         self.add_block(new_block)
         self.pending_transactions = []
         print("All pending transactions have been mined")
+
+    def create_nft(self, name: str, creator: str, metadata: str):
+        """
+        Creates a new NFT and adds it to the blockchain.
+        """
+        nft = NFT(name, creator, metadata)
+        self.nfts[nft.id] = nft
+        self.add_transaction("system", creator, 0, nft.__dict__)  # Add NFT creation transaction
+        self.mine_pending_transactions()
+        return nft
+
+    def list_nft(self, nft_id: str, price: float):
+        """
+        Lists an NFT for sale.
+        """
+        nft = self.nfts.get(nft_id)
+        if not nft:
+            raise ValueError("NFT not found")
+        self.add_transaction(nft.owner, "marketplace", 0, {"nft_id": nft_id, "price": price})  # Add NFT listing transaction
+        self.mine_pending_transactions()
+        return nft
+
+    def buy_nft(self, nft_id: str, buyer: str):
+        """
+        Transfers an NFT to a new owner.
+        """
+        nft = self.nfts.get(nft_id)
+        if not nft:
+            raise ValueError("NFT not found")
+        self.add_transaction(nft.owner, buyer, 0, {"nft_id": nft_id})  # Add NFT transfer transaction
+        nft.transfer(buyer)
+        self.mine_pending_transactions()
+        return nft

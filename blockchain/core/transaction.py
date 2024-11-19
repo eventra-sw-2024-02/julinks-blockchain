@@ -4,10 +4,11 @@ from typing import Optional
 
 
 class Transaction:
-    def __init__(self, sender: str, receiver: str, amount: float, signature: Optional[str] = None):
+    def __init__(self, sender: str, receiver: str, amount: float, data: Optional[dict] = None, signature: Optional[str] = None):
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
+        self.data = data if data else {}
         self.signature = signature  # La firma será añadida posteriormente
 
     def to_dict(self) -> dict:
@@ -18,6 +19,7 @@ class Transaction:
             "sender": self.sender,
             "receiver": self.receiver,
             "amount": self.amount,
+            "data": self.data,
         }
 
     def compute_hash(self) -> str:
@@ -42,4 +44,4 @@ class Transaction:
         return self.signature is not None
 
     def __repr__(self):
-        return f"Transaction(sender={self.sender}, receiver={self.receiver}, amount={self.amount})"
+        return f"Transaction(sender={self.sender}, receiver={self.receiver}, amount={self.amount}, data={self.data})"

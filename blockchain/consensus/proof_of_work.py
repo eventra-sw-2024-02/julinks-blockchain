@@ -1,4 +1,3 @@
-# proof_of_work.py
 import hashlib
 
 def proof_of_work(block, difficulty: int) -> (str, int):
