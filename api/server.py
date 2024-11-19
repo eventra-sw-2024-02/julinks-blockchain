@@ -27,6 +27,10 @@ def create_app():
     def handle_connect():
         emit('blockchain_update', {'blocks': [block.__dict__ for block in julinks.chain]})
 
+    @socketio.on('request_blockchain')
+    def handle_request_blockchain():
+        emit('blockchain_update', {'blocks': [block.__dict__ for block in julinks.chain]})
+
     @socketio.on('mine_block')
     def handle_mine_block():
         julinks.mine_pending_transactions()

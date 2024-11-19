@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,6 @@
 </head>
 <body>
     <h1>Blockchain Viewer</h1>
-    <button onclick="mineBlock()">Mine Block</button>
     <div id="blockchain"></div>
 
     <script>
@@ -16,6 +14,8 @@
 
         socket.on('connect', () => {
             console.log('Connected to server');
+            // Request the current blockchain state when connected
+            socket.emit('request_blockchain');
         });
 
         socket.on('blockchain_update', (data) => {
@@ -27,10 +27,6 @@
                 blockchainDiv.appendChild(blockDiv);
             });
         });
-
-        function mineBlock() {
-            socket.emit('mine_block');
-        }
     </script>
 </body>
 </html>

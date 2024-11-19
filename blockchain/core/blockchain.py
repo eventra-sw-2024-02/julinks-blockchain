@@ -1,6 +1,7 @@
 from datetime import datetime
 from blockchain.consensus.proof_of_work import proof_of_work
 from blockchain.core.block import Block
+from blockchain.core.transaction import Transaction
 from blockchain.smart_contracts.executor import Executor
 from blockchain.smart_contracts.compiler import Compiler
 from blockchain.smart_contracts.vm import VirtualMachine
@@ -78,3 +79,28 @@ class Blockchain:
             self.executor.run_contract(contract)
         else:
             print(f"Contract {name} not found")
+
+    def add_transaction(self, sender: str, recipient: str, amount: float):
+        """
+        Adds a new transaction to the list of pending transactions.
+        """
+        transaction = Transaction(sender, recipient, amount)
+        self.pending_transactions.append(transaction)
+
+    def mine_pending_transactions(self):
+        """
+        Mines all pending transactions and adds them to a new block.
+        """
+        if not self.pending_transactions:
+            print("No transactions to mine")
+            return
+
+        new_block = Block(
+            index=len(self.chain),
+            timestamp=str(datetime.now()),
+            data=[tx.to_dict() for tx in self.pending_transactions],
+            previous_hash=self.get_latest_block().hash
+        )
+        self.add_block(new_block)
+        self.pending_transactions = []
+        print("All pending transactions have been mined")
