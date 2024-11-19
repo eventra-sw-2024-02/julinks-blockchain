@@ -7,6 +7,8 @@ class NFT:
         self.name = name
         self.creator = creator  # Dirección del creador
         self.owner = owner if owner else creator  # Por defecto, el creador es el propietario inicial
+        if not isinstance(metadata, dict):
+            raise TypeError("Metadata must be a dictionary")
         self.metadata = metadata  # Metadatos (e.g., enlace a imagen, descripción)
         self.timestamp = datetime.now()  # Marca de tiempo de creación
 
