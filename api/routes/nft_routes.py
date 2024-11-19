@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from blockchain.ntfs.nft import NFT
-from blockchain.ntfs.marketplace import Marketplace
+from blockchain.nfts.nft import NFT
+from blockchain.nfts.marketplace import Marketplace
 
 nft_routes = Blueprint('nft_routes', __name__)
 

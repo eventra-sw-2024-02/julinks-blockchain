@@ -1,9 +1,10 @@
-from flask import Flask
-from flask_socketio import SocketIO
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
 from api.routes.wallet_routes import wallet_routes
 from api.routes.blockchain_routes import blockchain_routes
 from api.routes.nft_routes import nft_routes
 from api.routes.smart_contract_routes import smart_contract_routes
+from blockchain.core.blockchain import Blockchain
 
 def create_app():
     app = Flask(__name__)
@@ -14,6 +15,22 @@ def create_app():
     app.register_blueprint(blockchain_routes, url_prefix='/api/blockchain')
     app.register_blueprint(nft_routes, url_prefix='/api/nft')
     app.register_blueprint(smart_contract_routes, url_prefix='/api/contract')
+
+    # Initialize the blockchain
+    julinks = Blockchain()
+
+    @app.route('/')
+    def index():
+        return render_template('index.html')
+
+    @socketio.on('connect')
+    def handle_connect():
+        emit('blockchain_update', {'blocks': [block.__dict__ for block in julinks.chain]})
+
+    @socketio.on('mine_block')
+    def handle_mine_block():
+        julinks.mine_pending_transactions()
+        emit('blockchain_update', {'blocks': [block.__dict__ for block in julinks.chain]}, broadcast=True)
 
     return app, socketio
 

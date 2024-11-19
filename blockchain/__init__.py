@@ -5,8 +5,8 @@ from .wallet.wallet import Wallet
 from .wallet.key_management import verify_signature
 from .consensus import proof_of_work
 from .smart_contracts import Executor, Contract
-from .ntfs.nft import NFT
-from .ntfs.marketplace import Marketplace
+from .nfts.nft import NFT
+from .nfts.marketplace import Marketplace
 
 __all__ = [
     "Blockchain",
