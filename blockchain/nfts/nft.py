@@ -19,3 +19,16 @@ class NFT:
     def __repr__(self):
         return (f"NFT(id={self.id}, name={self.name}, creator={self.creator}, "
                 f"owner={self.owner}, metadata={self.metadata})")
+
+    def to_dict(self):
+        """
+        Representa el NFT como un diccionario, incluyendo la serialización de datetime.
+        """
+        return {
+            "id": self.id,
+            "name": self.name,
+            "creator": self.creator,
+            "owner": self.owner,
+            "metadata": self.metadata,
+            "timestamp": self.timestamp.isoformat() if isinstance(self.timestamp, datetime) else self.timestamp
+        }

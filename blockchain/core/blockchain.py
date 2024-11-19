@@ -109,12 +109,11 @@ class Blockchain:
 
     def create_nft(self, name: str, creator: str, metadata: str):
         """
-        Creates a new NFT and adds it to the blockchain.
+        Creates a new NFT and adds it to the list of NFTs.
         """
         nft = NFT(name, creator, metadata)
         self.nfts[nft.id] = nft
-        self.add_transaction("system", creator, 0, nft.__dict__)  # Add NFT creation transaction
-        self.mine_pending_transactions()
+        self.add_transaction("system", creator, 0, {"nft": nft.__dict__})  # Add NFT creation transaction
         return nft
 
     def list_nft(self, nft_id: str, price: float):
@@ -125,7 +124,6 @@ class Blockchain:
         if not nft:
             raise ValueError("NFT not found")
         self.add_transaction(nft.owner, "marketplace", 0, {"nft_id": nft_id, "price": price})  # Add NFT listing transaction
-        self.mine_pending_transactions()
         return nft
 
     def buy_nft(self, nft_id: str, buyer: str):
@@ -137,5 +135,4 @@ class Blockchain:
             raise ValueError("NFT not found")
         self.add_transaction(nft.owner, buyer, 0, {"nft_id": nft_id})  # Add NFT transfer transaction
         nft.transfer(buyer)
-        self.mine_pending_transactions()
         return nft
