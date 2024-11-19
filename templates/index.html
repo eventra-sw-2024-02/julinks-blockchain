@@ -1,0 +1,36 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blockchain Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <h1>Blockchain Viewer</h1>
+    <button onclick="mineBlock()">Mine Block</button>
+    <div id="blockchain"></div>
+
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('blockchain_update', (data) => {
+            const blockchainDiv = document.getElementById('blockchain');
+            blockchainDiv.innerHTML = '';
+            data.blocks.forEach(block => {
+                const blockDiv = document.createElement('div');
+                blockDiv.innerHTML = `<pre>${JSON.stringify(block, null, 2)}</pre>`;
+                blockchainDiv.appendChild(blockDiv);
+            });
+        });
+
+        function mineBlock() {
+            socket.emit('mine_block');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+// blockchain/smart_contracts/code/example.july
+let Simple: int = 10;
+
+contract "MyContract" {
+    let balance: int = 0;
+
+    function add_balance(amount: int) -> bool {
+        if amount > 0 {
+            balance = balance + amount;
+            log("Balance added");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function get_balance() -> int {
+        return balance;
+    }
+}
