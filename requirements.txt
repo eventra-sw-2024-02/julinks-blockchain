@@ -2,3 +2,4 @@ cryptography==43.0.3
 serialization==1.2.3
 flask==2.3.2
 flask-socketio==1.2.3
+pytest==7.2.2
