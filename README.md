@@ -48,7 +48,7 @@ curl -X GET http://localhost:5000/api/wallet/balance/<address>
 ### Crear un NFT
 
 ```sh
-curl -X POST http://localhost:5000/api/nft/create -H "Content-Type: application/json" -d '{"name": "Mi NFT", "creator": "direccion_del_creador", "metadata": "enlace_a_la_imagen"}'
+curl -X POST http://localhost:5000/api/nft/create -H "Content-Type: application/json" -d '{"name": "Mi NFT", "creator": "direccion_del_creador", "metadata": {"image": "enlace_a_la_imagen", "description": "descripcion_del_nft"}}'
 ```
 
 ### Listar un NFT para la venta
